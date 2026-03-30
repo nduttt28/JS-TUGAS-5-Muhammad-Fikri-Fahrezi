@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Manajemen Produk</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      margin: 40px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    .form {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 6px;
+      margin-right: 10px;
+      width: 150px;
+    }
+
+    button {
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 400px;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      border-bottom: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Manajemen Produk</h2>
+
+<ul id="listProduk"></ul>
+
+<div class="form">
+  <h3>Tambah Produk</h3>
+  <input type="text" id="nama" placeholder="Nama Produk">
+  <input type="number" id="harga" placeholder="Harga">
+  <button id="btnTambah">Tambah</button>
+</div>
+
+<script>
+
+// DATA AWAL
+let produkList = [
+  { id: 1, nama: "Laptop", harga: 12000000 },
+  { id: 2, nama: "Smartphone", harga: 5000000 },
+  { id: 3, nama: "Keyboard Mechanical", harga: 850000 },
+  { id: 4, nama: "Flashdisk 64GB", harga: 120000 },
+  { id: 5, nama: "Webcam HD", harga: 450000 }
+];
+
+// TAMPILKAN
+function tampilkanProduk() {
+  const list = document.getElementById("listProduk");
+  list.innerHTML = "";
+
+  produkList.forEach(({ id, nama, harga }) => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <span>${nama} - Rp${harga}</span>
+      <button data-id="${id}">Hapus</button>
+    `;
+    list.appendChild(li);
+  });
+
+  console.log(produkList);
+}
+
+// TAMBAH
+function tambahProduk(...data) {
+  const [id, nama, harga] = data;
+
+  const produkBaru = { id, nama, harga };
+
+  produkList = [...produkList, produkBaru];
+  tampilkanProduk();
+}
+
+// HAPUS
+function hapusProduk(id) {
+  produkList = produkList.filter(p => p.id !== id);
+  tampilkanProduk();
+}
+
+// EVENT
+document.getElementById("btnTambah").addEventListener("click", function () {
+  const nama = document.getElementById("nama").value;
+  const harga = document.getElementById("harga").value;
+
+  if (!nama || !harga) {
+    alert("Isi data dulu!");
+    return;
+  }
+
+  const idBaru = produkList.length + 1;
+
+  tambahProduk(idBaru, nama, Number(harga));
+
+  document.getElementById("nama").value = "";
+  document.getElementById("harga").value = "";
+});
+
+document.getElementById("listProduk").addEventListener("click", function (e) {
+  if (e.target.tagName === "BUTTON") {
+    const id = Number(e.target.getAttribute("data-id"));
+    hapusProduk(id);
+  }
+});
+
+// LOAD AWAL
+tampilkanProduk();
+
+</script>
+
+</body>
+</html>
